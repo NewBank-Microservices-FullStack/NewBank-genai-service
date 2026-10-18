@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.springframework.samples.petclinic.genai</groupId>
-	<artifactId>spring-petclinic-genai-service</artifactId>
+	<groupId>com.newbank.microservices.genai</groupId>
+	<artifactId>newbank-genai-service</artifactId>
 	<packaging>jar</packaging>
-	<description>Spring PetClinic Generative AI Service</description>
+	<description>NewBank GenAI Service</description>
 
 	<parent>
 		<groupId>org.springframework.samples</groupId>
