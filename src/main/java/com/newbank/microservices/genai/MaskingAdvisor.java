@@ -7,8 +7,7 @@ import org.springframework.ai.chat.client.advisor.api.CallAroundAdvisorChain;
 import org.springframework.core.Ordered;
 
 /**
- * #15: replaces {@code SimpleLoggerAdvisor} (which logs full customer data)
- * with a metadata-only advisor. Never logs prompt/response content.
+ * #15: metadata-only advisor; logging properties managed via logback.
  */
 public class MaskingAdvisor implements CallAroundAdvisor {
 
