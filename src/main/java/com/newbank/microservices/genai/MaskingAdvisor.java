@@ -1,15 +1,15 @@
 package com.newbank.microservices.genai;
 
-import org.springframework.ai.chat.client.advisor.api.AdvisedRequest;
-import org.springframework.ai.chat.client.advisor.api.AdvisedResponse;
-import org.springframework.ai.chat.client.advisor.api.CallAroundAdvisor;
-import org.springframework.ai.chat.client.advisor.api.CallAroundAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.ChatClientRequest;
+import org.springframework.ai.chat.client.advisor.api.ChatClientResponse;
 import org.springframework.core.Ordered;
 
 /**
  * #15: metadata-only advisor; logging properties managed via logback.
  */
-public class MaskingAdvisor implements CallAroundAdvisor {
+public class MaskingAdvisor implements CallAdvisor {
 
     @Override
     public String getName() {
@@ -22,7 +22,7 @@ public class MaskingAdvisor implements CallAroundAdvisor {
     }
 
     @Override
-    public AdvisedResponse aroundCall(AdvisedRequest request, CallAroundAdvisorChain chain) {
+    public ChatClientResponse aroundCall(ChatClientRequest request, CallAdvisorChain chain) {
         return chain.nextAroundCall(request);
     }
 }
