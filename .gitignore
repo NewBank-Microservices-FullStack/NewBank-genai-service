@@ -1,1 +1,11 @@
- /.apt_generated/
+# build output / local env — never commit
+target/
+.env
+*.class
+.DS_Store
+.idea/
+*.iml
+
+# #4: runtime-built embedding dump must never be committed
+src/main/resources/vectorstore.json
+vectorstore.json

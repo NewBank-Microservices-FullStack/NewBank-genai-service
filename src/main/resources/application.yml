@@ -1,39 +1,100 @@
 spring:
-  main:
-    web-application-type: reactive
   application:
     name: newbank-genai-service
   profiles:
     active: production
   config:
-    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/},optional:classpath:/creds.yaml
+    # #6: the `classpath:/creds.yaml` import is gone — secrets come from env only.
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
   ai:
     chat:
       client:
         enabled: true
-    azure:
-      openai:
-        api-key: ${AZURE_OPENAI_KEY}
-        endpoint: ${AZURE_OPENAI_ENDPOINT}
-        chat:
-          options:
-            temperature: 0.7
-            deployment-name: gpt-4o
+    # #6: single provider (OpenAI). No spring.ai.azure.* block anymore.
     openai:
       api-key: ${OPENAI_API_KEY:demo}
       chat:
         options:
           temperature: 0.7
-          model: gpt-4o-mini
+          model: ${OPENAI_MODEL:gpt-4o-mini}
+      embedding:
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:}
+  # #17: pgvector in prod; memory fallback for local dev.
+  datasource:
+    url: ${PGVECTOR_JDBC_URL:jdbc:postgresql://localhost:5432/vectordb}
+    username: ${PGVECTOR_USERNAME:vectordb}
+    password: ${PGVECTOR_PASSWORD:}
+    hikari:
+      maximum-pool-size: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+newbank:
+  genai:
+    user-service-url: ${USER_SERVICE_URL:http://user-service}
+    account-service-url: ${ACCOUNT_SERVICE_URL:http://account-service}
+    transaction-service-url: ${TRANSACTION_SERVICE_URL:http://transaction-service}
+    advisors-url: ${ADVISORS_URL:http://advisors-service}
+    vector-store-type: ${VECTOR_STORE_TYPE:memory}
+    max-prompt-chars: ${MAX_PROMPT_CHARS:4000}
+    rate-limit-per-minute: ${RATE_LIMIT_PER_MINUTE:30}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+      accountService:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+      advisorsService:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+  ratelimiter:
+    instances:
+      chatPerUser:
+        limitForPeriod: ${RATE_LIMIT_PER_MINUTE:30}
+        limitRefreshPeriod: 1m
+        timeoutDuration: 0s
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 logging:
   level:
-    org:
-      springframework:
-        ai:
-          chat:
-            client:
-              advisor: DEBUG
+    root: INFO
+    com.newbank: INFO
+    # #15: NEVER debug-log advisor/chat content in production (PII).
+    org.springframework.ai.chat.client.advisor: WARN
+    org.springframework.ai: WARN
 ---
 spring:
   config:

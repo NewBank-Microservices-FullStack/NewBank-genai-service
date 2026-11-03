@@ -124,3 +124,18 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 Two notes from inspecting the code rather than the README: the `/chatclient` failure path returns HTTP 200 with an error string, and `vectorstore.json` really does contain PetClinic `radiology` advisor data — both are called out above because they're the most likely to surprise a reviewer.
 
 Want me to commit this into `README.md` through the GitHub web editor (I'd need you to be signed in and confirm the commit), or adjust the tone/length first?
+
+## Hardening notes (P0–P2 todos applied)
+
+See [FIXES.md](FIXES.md) for the todo → file map. Highlights:
+
+- `POST /chatclient` requires a gateway-issued JWT; writes additionally need a
+  role (`ADMIN`/`ADVISOR`) **and** explicit user confirmation (`confirmWrites:true`
+  after a propose step), plus per-user rate limiting.
+- Chat memory is keyed per conversation/session/user — no shared history.
+- `POST /chatclient/stream` offers the same contract over SSE; errors are
+  RFC 7807 problem details.
+- No committed embeddings: the advisor index builds at runtime from
+  advisors-service and refreshes asynchronously.
+- Quickstart: `cp .env.example .env`, `./mvnw spring-boot:run`
+  (or `docker compose up --build`), then `./smoke.sh` (needs `$JWT`).
