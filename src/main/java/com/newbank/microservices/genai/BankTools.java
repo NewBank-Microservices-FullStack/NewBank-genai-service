@@ -18,6 +18,7 @@ import com.newbank.microservices.genai.dto.AccountRequest;
 import com.newbank.microservices.genai.dto.Advisor;
 import com.newbank.microservices.genai.dto.CustomerDetails;
 import com.newbank.microservices.genai.dto.CustomerRequest;
+import org.springframework.ai.chat.model.ToolContext;
 
 /**
  * #3: writes are role-restricted, validated with {@code @Valid} (the constraints on
