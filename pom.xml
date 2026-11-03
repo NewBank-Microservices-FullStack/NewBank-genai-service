@@ -121,7 +121,7 @@
 		<dependency>
 		    <groupId>net.ttddyy.observation</groupId>
 		    <artifactId>datasource-micrometer-spring-boot</artifactId>
-		    <!-- <version>1.0.8</version>  -->
+		    <version>1.0.7</version> 
 		</dependency>
 
 		<!-- #9: REMOVED — gateway-server-webflux (a service must not host a gateway),
