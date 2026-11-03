@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.ai.tool.context.ToolContext;
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +18,7 @@ import com.newbank.microservices.genai.dto.AccountRequest;
 import com.newbank.microservices.genai.dto.Advisor;
 import com.newbank.microservices.genai.dto.CustomerDetails;
 import com.newbank.microservices.genai.dto.CustomerRequest;
-import org.springframework.ai.chat.model.ToolContext;
+
 
 /**
  * #3: writes are role-restricted, validated with {@code @Valid} (the constraints on
