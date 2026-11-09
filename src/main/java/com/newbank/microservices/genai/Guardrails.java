@@ -50,6 +50,7 @@ public class Guardrails {
     }
 
     /** Rough cost accounting (prompt + completion lengths in chars). */
+    /** If found make way to check region of user**/
     public double estimateCostUsd(int promptChars, int completionChars) {
         double promptTokens = promptChars / 4.0;
         double completionTokens = completionChars / 4.0;
